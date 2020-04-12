@@ -14,7 +14,7 @@ namespace DatingApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController: ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
@@ -25,11 +25,12 @@ namespace DatingApp.API.Controllers
             _config = config;
         }
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto )
+        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
             //Validate user
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
-            if (await _repo.UserExists(userForRegisterDto.Username)){
+            if (await _repo.UserExists(userForRegisterDto.Username))
+            {
                 return BadRequest("User Already Exists!");
             }
             var userToCreate = new User
@@ -39,12 +40,13 @@ namespace DatingApp.API.Controllers
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
             return StatusCode(201);
         }
-        
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
+
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
-            if(userFromRepo == null)
+            if (userFromRepo == null)
             {
                 return Unauthorized();
             }
@@ -61,7 +63,7 @@ namespace DatingApp.API.Controllers
             .GetBytes(_config.GetSection("AppSettings:Token").Value));
 
             // Creating Siging Credentials
-            var creds= new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             // Time to create a security token descriptor
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -77,7 +79,8 @@ namespace DatingApp.API.Controllers
             // Create Token
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new {
+            return Ok(new
+            {
                 token = tokenHandler.WriteToken(token)
             });
 
