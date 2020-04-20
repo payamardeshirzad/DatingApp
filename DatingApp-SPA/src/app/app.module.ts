@@ -1,3 +1,5 @@
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberListResolver } from './_resolvers/member-list.resolver';
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 import { UserService } from './_services/user.service';
@@ -22,8 +24,9 @@ import { MessagesComponent } from './messages/messages.component';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
-import { AuthGuard } from './_guards/auth.guard';
 import { NgxGalleryModule } from 'ngx-gallery';
+import { AuthGuard } from './_guards/auth.guard';
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 
 
 export function tokenGetter() {
@@ -46,6 +49,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     MemberListComponent,
     MemberCardComponent,
     MemberDetailComponent,
+    MemberEditComponent,
     ListsComponent,
     MessagesComponent,
   ],
@@ -69,6 +73,10 @@ export class CustomHammerConfig extends HammerGestureConfig {
     ErrorInterceptorProvider,
     MemberDetailResolver,
     MemberListResolver,
+    MemberEditResolver,
+    AuthService,
+    AuthGuard,
+    PreventUnsavedChanges,
     { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
 
   ],
