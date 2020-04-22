@@ -13,6 +13,7 @@ import { NgForm } from '@angular/forms';
 })
 export class MemberEditComponent implements OnInit {
   user: User;
+  photoUrl: string;
   @ViewChild('editForm', { static: true }) editForm: NgForm;
   // This has been added to control the unsaved changes when closing the browser
   @HostListener('window:beforeunload', ['$event'])
@@ -32,14 +33,22 @@ export class MemberEditComponent implements OnInit {
     this.route.data.subscribe((data) => {
       this.user = data['user'];
     });
+    this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
   updateUser() {
-    this.userService.updateUser(this.authService.decodedToken.nameid, this.user).subscribe(next => {
-      this.alertify.success('Profile Update Successfully!');
-      this.editForm.reset(this.user);
-    }, error => {
-      this.alertify.error(error);
-    });
-
+    this.userService
+      .updateUser(this.authService.decodedToken.nameid, this.user)
+      .subscribe(
+        (next) => {
+          this.alertify.success('Profile Update Successfully!');
+          this.editForm.reset(this.user);
+        },
+        (error) => {
+          this.alertify.error(error);
+        }
+      );
+  }
+  updateMainPhoto(photoUrl) {
+    this.user.photoUrl = photoUrl;
   }
 }
