@@ -28,10 +28,20 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
         {
-            var users = await _repo.GetUsers();
+            // Filter the current ID
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userFromRepo = await _repo.GetUser(currentUserId);
+            userParams.UserId = currentUserId;
+            if (string.IsNullOrEmpty(userParams.Gender)){
+                userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+            }
+            var users = await _repo.GetUsers(userParams);
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+            // As we are inisde api controller we have access to HttpResponse and we can use our AddPagination extension method
+            // and We add this information to the respnse header
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             return Ok(usersToReturn);
         }
 

@@ -18,7 +18,7 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
-import { TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
+import { TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule } from 'ngx-bootstrap';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
@@ -65,6 +65,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    PaginationModule.forRoot(),
+    ButtonsModule.forRoot(),
     TabsModule.forRoot(),
     BsDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
